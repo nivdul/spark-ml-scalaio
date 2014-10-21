@@ -42,11 +42,13 @@ object ClassifyMailWithLogisticRegression {
     // training model on training set with 100 iterations
     val model = LogisticRegressionWithSGD.train(training, 100)
 
+    // make prediction on email from the test data
     val predictionAndLabel = test.map(p => (model.predict(p.features), p.label))
 
-    //pas bien compris les metrics
     val metrics = new BinaryClassificationMetrics(predictionAndLabel)
 
+
+    // compute accuracy of the model from the test data
     val accuracy = 1.0 * predictionAndLabel.filter(x => x._1 == x._2).count() / test.count()
 
     // l'accuracy ne donne pas de bons résultats = 0.44

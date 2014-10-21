@@ -1,0 +1,4 @@
+Hello à tous et bienvenue à la conférence scala io.
+Cette année c'est la seconde édition de la conférence scala io.
+
+L'équipe de scala io
