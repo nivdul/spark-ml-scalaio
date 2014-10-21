@@ -23,12 +23,15 @@ object Wordcount {
                          .map(word => (word, 1))
                          .reduceByKey(_ + _)
 
-    System.out.println(wordCounts)
-    wordCounts.saveAsTextFile("resultWordCount")
+    wordCounts.cache()
 
-    wordCounts.persist()
+    println(wordCounts.collect().toList)
 
-    wordCounts.saveAsTextFile("resultWordCountAfterFiltering")
+    val filteredCount = wordCounts.filter{
+      case (key, value) => value > 2
+    }
+
+    println(filteredCount.collect().toList)
   }
 
   def main(args: Array[String])= sparkJob()
