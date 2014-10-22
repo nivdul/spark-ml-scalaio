@@ -6,17 +6,12 @@ import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 
-/**
- * Created by ludwineprobst on 20/10/2014.
- */
 object MoviesRecommenderSystemALS {
 
   def sparkJob() = {
 
-    val file = "recommenderSystem_data.txt"
-
     val conf = new SparkConf()
-      .setAppName("Spark film recommender system")
+      .setAppName("Spark movies recommender system with ALS")
       .setMaster("local")
 
     val sc = new SparkContext(conf)
@@ -24,6 +19,7 @@ object MoviesRecommenderSystemALS {
     // Load and parse the data
     val data = sc.textFile("movies.csv")
 
+    // Extract features as Rating
     val ratings = data.map(_.split("\\s+") match {
       case Array(user, item, rate) => Rating(user.toInt, item.toInt, rate.toDouble)
     })
@@ -32,12 +28,10 @@ object MoviesRecommenderSystemALS {
     val training = splits(0).cache()
     val test = splits(1)
 
-
     // Build the recommendation model using ALS from training data
     val model = ALS.train(training, rank = 10, iterations = 20, 0.01)
 
-
-    // Evaluate the model on rating data
+    // Evaluate the model
     val userMovies = test.map {
       case Rating(user, movie, rate) => (user, movie)
     }
@@ -53,7 +47,10 @@ object MoviesRecommenderSystemALS {
       val err = (r1 - r2)
       err * err
     }.mean()
+
     println("Mean Squared Error = " + MSE)
+
+    sc.stop()
 
   }
 
