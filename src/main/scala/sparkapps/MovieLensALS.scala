@@ -16,6 +16,10 @@ import org.apache.spark.mllib.recommendation.{ALS, Rating, MatrixFactorizationMo
 object MovieLensALS {
 
   def main(args: Array[String]) {
+    
+    
+     Logger.getLogger("org.apache.spark").setLevel(Level.WARN)
+     Logger.getLogger("org.eclipse.jetty.server").setLevel(Level.OFF)	
 
    
     val conf = new SparkConf()
